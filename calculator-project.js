@@ -15,16 +15,15 @@ function multiply(firstNum, secondNum) {
 }
 
 function divide(firstNum, secondNum) {
-    return Number(firstNum) / Number(secondNum);
+    if(secondNum != 0) return Number(firstNum) / Number(secondNum);
+    return 'Try again!';
 }
 
 function operate(firstNum) {
-    operationResult.innerText += '=';
-    operationResult.innerText += firstNum;
-    
+    if(operationResult.innerText.length != 0) {
+        operationResult.innerText += `=${firstNum}`;
+    } 
 }
-
-const operationResult = document.getElementById('operation-result');
 
 const firstNumListener = function() {
     firstNum += this.textContent;
@@ -37,29 +36,63 @@ const secondNumListener = function() {
     if (operator === '+') firstNum = add(firstNum, secondNum);
     else if (operator === '-') firstNum = subtract(firstNum, secondNum);
     else if (operator === '*') firstNum = multiply(firstNum, secondNum);
-    else if (operator === '/') firstNum = divide(firstNum, secondNum);  
+    else if (operator === '/') firstNum = divide(firstNum, secondNum); 
 }
 
-document.querySelectorAll('.digits').forEach(digit => {
-    digit.addEventListener('click', firstNumListener);
-})
+const operationResult = document.getElementById('operation-result');
 
-document.querySelectorAll('.operators').forEach(item => {
-    item.addEventListener('click', () => {
-        operator = item.innerText;
-        operationResult.innerText += item.innerText;
-        document.querySelectorAll('.digits').forEach(digit => {
-            digit.removeEventListener('click', firstNumListener);
-            digit.addEventListener('click', secondNumListener);
-        }) 
-        secondNum = '';
+function listenDigits() {
+    document.querySelectorAll('.digits').forEach(digit => {
+        digit.addEventListener('click', firstNumListener);
     })
-})
-      
-const operatorEqual = document.getElementById('operator-equal');
-operatorEqual.addEventListener('click', () => {
-    operate(firstNum, secondNum, operator);
-});
+}
 
+let condition = true;
+const operators = ['+', '-', '*', '/'];
 
+function listenOperators() {
+    document.querySelectorAll('.operators').forEach(item => {
+        item.addEventListener('click', () => {
+            operator = item.innerText;   
+            if(operationResult.innerText.length != 0 && condition) {
+                if(operators.every(el => operationResult.innerText[operationResult.innerText.length-1].includes(el) == false)) operationResult.innerText += operator;  
+                operationResult.innerText = operationResult.innerText.slice(0, -1) + operator;
+            
+            document.querySelectorAll('.digits').forEach(digit => {
+                digit.removeEventListener('click', firstNumListener);
+                digit.addEventListener('click', secondNumListener);
+            })
+            }
+            secondNum = '';
+        });
+    })
+}
+const once = {
+    once: true,
+}
+function listenEqual() {
+    const operatorEqual = document.getElementById('operator-equal');
+    operatorEqual.addEventListener('click', () => {
+        operate(firstNum, secondNum, operator);
+        document.querySelectorAll('.digits').forEach(digit => {
+            digit.removeEventListener('click', secondNumListener);
+        })
+        condition = false;
+    },once);
+}
 
+const clearBtn = document.getElementById('clear');
+
+function clear() {
+    clearBtn.addEventListener('click', () => {
+        firstNum = '';
+        secondNum = '';
+        operator = '';
+        operationResult.innerText = '';
+    })
+}
+
+listenDigits();
+listenOperators();
+listenEqual();
+clear();
