@@ -15,6 +15,7 @@
     margin-right: auto;
     margin-bottom: 20px;
     margin-top: 13px;
+    overflow: hidden;
 }
 
 #flex-column-container {

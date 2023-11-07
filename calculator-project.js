@@ -21,13 +21,14 @@ function divide(firstNum, secondNum) {
 
 function operate(firstNum) {
     if(operationResult.innerText.length != 0) {
-        operationResult.innerText += `=${firstNum}`;
+        operationResult.innerText += `\n=${firstNum}`;
     } 
 }
 
 const firstNumListener = function() {
     firstNum += this.textContent;
     operationResult.innerText += this.textContent;
+    
 }
 
 const secondNumListener = function() {
@@ -36,12 +37,12 @@ const secondNumListener = function() {
     if (operator === '+') firstNum = add(firstNum, secondNum);
     else if (operator === '-') firstNum = subtract(firstNum, secondNum);
     else if (operator === '*') firstNum = multiply(firstNum, secondNum);
-    else if (operator === '/') firstNum = divide(firstNum, secondNum); 
+    else if (operator === '/') firstNum = divide(firstNum, secondNum);
 }
 
 const operationResult = document.getElementById('operation-result');
 
-function listenDigits() {
+function firstNumListen() {
     document.querySelectorAll('.digits').forEach(digit => {
         digit.addEventListener('click', firstNumListener);
     })
@@ -57,12 +58,11 @@ function listenOperators() {
             if(operationResult.innerText.length != 0 && condition) {
                 if(operators.every(el => operationResult.innerText[operationResult.innerText.length-1].includes(el) == false)) operationResult.innerText += operator;  
                 operationResult.innerText = operationResult.innerText.slice(0, -1) + operator;
-            
+            }
             document.querySelectorAll('.digits').forEach(digit => {
                 digit.removeEventListener('click', firstNumListener);
                 digit.addEventListener('click', secondNumListener);
             })
-            }
             secondNum = '';
         });
     })
@@ -72,11 +72,11 @@ const once = {
 }
 function listenEqual() {
     const operatorEqual = document.getElementById('operator-equal');
-    operatorEqual.addEventListener('click', () => {
+    operatorEqual.addEventListener('click', () => {        
         operate(firstNum, secondNum, operator);
         document.querySelectorAll('.digits').forEach(digit => {
             digit.removeEventListener('click', secondNumListener);
-        })
+        }) 
         condition = false;
     },once);
 }
@@ -89,10 +89,16 @@ function clear() {
         secondNum = '';
         operator = '';
         operationResult.innerText = '';
+        document.querySelectorAll('.digits').forEach(digit => {
+            digit.removeEventListener('click', secondNumListener);
+        })
+        firstNumListen();
+        listenEqual();
+        condition = true;
+        
     })
 }
-
-listenDigits();
+firstNumListen();
 listenOperators();
 listenEqual();
 clear();
