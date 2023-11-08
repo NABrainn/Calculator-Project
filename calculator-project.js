@@ -37,9 +37,15 @@ function operate() {
 }
 
 const firstNumListener = function() {
-    firstNum += this.textContent;
-    operationResult.innerText == '0' ? operationResult.innerText = this.textContent : operationResult.innerText += this.textContent; 
-}
+    if(operationResult.innerText == '0' && this.textContent == '0') {       
+        firstNum = '0';
+    }
+    else {
+        firstNum += this.textContent;
+        operationResult.innerText == '0' ? operationResult.innerText = this.textContent : operationResult.innerText += this.textContent; 
+    }
+         
+}      
 
 const secondNumListener = function() {
     if(secondNum === '0') {
