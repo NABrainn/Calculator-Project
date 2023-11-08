@@ -24,7 +24,7 @@ body {
 }
 
 #operation-result {
-    width: 246px;
+    width: 247px;
     height: 50px;
     border: 1px solid black;
     padding-left: 10px;
@@ -44,22 +44,22 @@ body {
     flex-direction: column;
     margin-left: auto;
     margin-right: auto;
-    gap: 17px;
+    gap: 5px;
 
 }
 
 .flex-row-container {
     display: flex;
     justify-content: center;
-    gap: 17px;
+    gap: 5px;
 }
 
 .flex-row-container div {
-    height: 39px;
-    width: 50px;
+    height: 49px;
+    width: 59px;
     border: 1px solid black;
     text-align: center;
-    line-height: 35px;
+    line-height: 49px;
     
 }
 
