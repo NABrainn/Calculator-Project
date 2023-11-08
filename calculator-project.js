@@ -3,7 +3,7 @@ let secondNum = '';
 let operator = '';
 let result = '';
 let error = ''
-
+let secondNumLength;
 function add(firstNum, secondNum) {
     return Number(firstNum) + Number(secondNum);
 }
@@ -22,20 +22,22 @@ function divide(firstNum, secondNum) {
     }
     return Number(firstNum) / Number(secondNum);
 }
-
 function operate() {
     if(operationResult.innerText.length != 0) {
         if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += '\n=0';
         else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`
-        else if(error != '') operationResult.innerText += `\n=${error}`
+        else if(error != '') operationResult.innerText += `\n=${error}`;
+        
         else if(operationResult.innerText[operationResult.innerText.length-1] === operator){
-            if(secondNum != ''){
-                operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result*10)/10}`;
+            secondNumLength = secondNum.toString().length;
+            if(secondNum != ''){            
+                operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
             }
             operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${firstNum}`;
         }
-        else {   
-            operationResult.innerText += `\n=${Math.round(result*10)/10}`;
+        else {
+            secondNumLength = secondNum.toString().length;  
+            operationResult.innerText += `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
         }
     } 
 }
