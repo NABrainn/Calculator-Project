@@ -2,6 +2,7 @@ let firstNum = '';
 let secondNum = '';
 let operator = '';
 let result = '';
+let error = ''
 
 function add(firstNum, secondNum) {
     return Number(firstNum) + Number(secondNum);
@@ -16,16 +17,24 @@ function multiply(firstNum, secondNum) {
 }
 
 function divide(firstNum, secondNum) {
-    if(secondNum != 0) return Number(firstNum) / Number(secondNum);
-    return 'Try again!';
+    if(secondNum === '0'){
+        error = 'Division by 0 detected';
+    }
+    return Number(firstNum) / Number(secondNum);
 }
 
 function operate() {
     if(operationResult.innerText.length != 0) {
-        if(operationResult.innerText[operationResult.innerText.length-1] === operator){
-            operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result*10)/10}`;
+        if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += '\n=0';
+        else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`
+        else if(error != '') operationResult.innerText += `\n=${error}`
+        else if(operationResult.innerText[operationResult.innerText.length-1] === operator){
+            if(secondNum != ''){
+                operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result*10)/10}`;
+            }
+            operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${firstNum}`;
         }
-        else {
+        else {   
             operationResult.innerText += `\n=${Math.round(result*10)/10}`;
         }
     } 
@@ -33,13 +42,18 @@ function operate() {
 
 const firstNumListener = function() {
     firstNum += this.textContent;
-    operationResult.innerText += this.textContent;
-   
+    operationResult.innerText == '0' ? operationResult.innerText = this.textContent : operationResult.innerText += this.textContent;
 }
 
 const secondNumListener = function() {
-    secondNum += this.textContent;
-    operationResult.innerText += this.textContent;
+    if(secondNum === '0') {
+        secondNum = this.textContent;
+        operationResult.innerText = operationResult.innerText.slice(0, -1) + `${secondNum}`;
+    }
+    else {
+        secondNum += this.textContent;
+        operationResult.innerText += this.textContent; 
+    }
     if (operator === '+') result = add(firstNum, secondNum);
     else if (operator === '-') result = subtract(firstNum, secondNum);
     else if (operator === '*') result = multiply(firstNum, secondNum);
@@ -47,6 +61,7 @@ const secondNumListener = function() {
 }
 
 const operationResult = document.getElementById('operation-result');
+operationResult.innerText = 0;
 
 function firstNumListen() {
     document.querySelectorAll('.digits').forEach(digit => {
@@ -68,6 +83,17 @@ function listenOperatorFunc() {
     secondNum = '';
 }
 
+function listenEqualFunc() {
+    operate();
+    document.querySelectorAll('.digits').forEach(digit => {
+        digit.removeEventListener('click', secondNumListener);
+    })
+    document.querySelectorAll('.operators').forEach(item => {
+        item.removeEventListener('click', listenOperatorFunc);
+    })
+    condition = false;
+}
+
 let condition = true;
 const operators = ['+', '-', '*', '/'];
 
@@ -79,18 +105,9 @@ function listenOperators() {
 const once = {
     once: true,
 }
+const operatorEqual = document.getElementById('operator-equal');
 function listenEqual() {
-    const operatorEqual = document.getElementById('operator-equal');
-    operatorEqual.addEventListener('click', () => {        
-        operate();
-        document.querySelectorAll('.digits').forEach(digit => {
-            digit.removeEventListener('click', secondNumListener);
-        })
-        document.querySelectorAll('.operators').forEach(item => {
-            item.removeEventListener('click', listenOperatorFunc);
-        })
-        condition = false;
-    },once);
+    operatorEqual.addEventListener('click',listenEqualFunc, once);        
 }
 
 const clearBtn = document.getElementById('clear');
@@ -101,10 +118,12 @@ function clear() {
         secondNum = '';
         operator = '';
         result = '';
-        operationResult.innerText = '';
+        error = '';
+        operationResult.innerText = 0;
         document.querySelectorAll('.digits').forEach(digit => {
             digit.removeEventListener('click', secondNumListener);
         })
+        operatorEqual.removeEventListener('click',listenEqualFunc, once);
         firstNumListen();
         listenOperators();
         listenEqual();
