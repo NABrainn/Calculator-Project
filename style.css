@@ -2,6 +2,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 600;
     font-size: larger;
+    user-select: none;
 }
 #calculator-wrapper {
     border: 1px solid black;
