@@ -1,9 +1,3 @@
-let firstNum = '';
-let secondNum = '';
-let operator = '';
-let result = '';
-let error = ''
-let secondNumLength;
 function add(firstNum, secondNum) {
     return Number(firstNum) + Number(secondNum);
 }
@@ -18,7 +12,8 @@ function multiply(firstNum, secondNum) {
 
 function divide(firstNum, secondNum) {
     if(secondNum === '0'){
-        error = 'Division by 0 detected';
+        operationResult.innerText += '\n=Division by 0 detected';
+        removeListeners();
     }
     return Number(firstNum) / Number(secondNum);
 }
@@ -26,8 +21,6 @@ function operate() {
     if(operationResult.innerText.length != 0) {
         if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += '\n=0';
         else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`
-        else if(error != '') operationResult.innerText += `\n=${error}`;
-        
         else if(operationResult.innerText[operationResult.innerText.length-1] === operator){
             secondNumLength = secondNum.toString().length;
             if(secondNum != ''){            
@@ -62,8 +55,7 @@ const secondNumListener = function() {
     else if (operator === '/') result = divide(firstNum, secondNum);
 }
 
-const operationResult = document.getElementById('operation-result');
-operationResult.innerText = 0;
+
 
 function firstNumListen() {
     document.querySelectorAll('.digits').forEach(digit => {
@@ -96,17 +88,14 @@ function listenEqualFunc() {
     condition = false;
 }
 
-let condition = true;
-const operators = ['+', '-', '*', '/'];
+
 
 function listenOperators() {
     document.querySelectorAll('.operators').forEach(item => {
         item.addEventListener('click', listenOperatorFunc);
     })
 }
-const once = {
-    once: true,
-}
+
 const operatorEqual = document.getElementById('operator-equal');
 function listenEqual() {
     operatorEqual.addEventListener('click',listenEqualFunc, once);        
@@ -131,6 +120,31 @@ function clear() {
         listenEqual();
         condition = true;        
     })
+}
+
+function removeListeners() {
+    operatorEqual.removeEventListener('click',listenEqualFunc, once);
+    document.querySelectorAll('.digits').forEach(digit => {
+        digit.removeEventListener('click', secondNumListener);
+    })
+    document.querySelectorAll('.operators').forEach(item => {
+        item.removeEventListener('click', listenOperatorFunc);
+    })
+}
+let firstNum = '';
+let secondNum = '';
+let operator = '';
+let result = '';
+let secondNumLength;
+
+const operationResult = document.getElementById('operation-result');
+operationResult.innerText = 0;
+
+let condition = true;
+const operators = ['+', '-', '*', '/'];
+
+const once = {
+    once: true,
 }
 firstNumListen();
 listenOperators();
