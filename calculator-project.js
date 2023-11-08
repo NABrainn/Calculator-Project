@@ -11,16 +11,17 @@ function multiply(firstNum, secondNum) {
 }
 
 function divide(firstNum, secondNum) {
-    if(secondNum === '0'){
+    if(secondNum === '0') {
         operationResult.innerText += '\n=Division by 0 detected';
         removeListeners();
     }
     return Number(firstNum) / Number(secondNum);
 }
 function operate() {
+    if (firstNum != '0') firstNum = firstNum.slice(1);
     if(operationResult.innerText.length != 0) {
-        if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += '\n=0';
-        else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`
+        if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += `\n=0`;
+        else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`;
         else if(operationResult.innerText[operationResult.innerText.length-1] === operator){
             secondNumLength = secondNum.toString().length;
             if(secondNum != ''){            
@@ -32,12 +33,12 @@ function operate() {
             secondNumLength = secondNum.toString().length;  
             operationResult.innerText += `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
         }
-    } 
+    }
 }
 
 const firstNumListener = function() {
     firstNum += this.textContent;
-    operationResult.innerText == '0' ? operationResult.innerText = this.textContent : operationResult.innerText += this.textContent;
+    operationResult.innerText == '0' ? operationResult.innerText = this.textContent : operationResult.innerText += this.textContent; 
 }
 
 const secondNumListener = function() {
@@ -54,8 +55,6 @@ const secondNumListener = function() {
     else if (operator === '*') result = multiply(firstNum, secondNum);
     else if (operator === '/') result = divide(firstNum, secondNum);
 }
-
-
 
 function firstNumListen() {
     document.querySelectorAll('.digits').forEach(digit => {
@@ -88,8 +87,6 @@ function listenEqualFunc() {
     condition = false;
 }
 
-
-
 function listenOperators() {
     document.querySelectorAll('.operators').forEach(item => {
         item.addEventListener('click', listenOperatorFunc);
@@ -105,7 +102,7 @@ const clearBtn = document.getElementById('clear');
 
 function clear() {
     clearBtn.addEventListener('click', () => {
-        firstNum = '';
+        firstNum = '0';
         secondNum = '';
         operator = '';
         result = '';
@@ -131,7 +128,7 @@ function removeListeners() {
         item.removeEventListener('click', listenOperatorFunc);
     })
 }
-let firstNum = '';
+let firstNum = '0';
 let secondNum = '';
 let operator = '';
 let result = '';
@@ -146,6 +143,7 @@ const operators = ['+', '-', '*', '/'];
 const once = {
     once: true,
 }
+
 firstNumListen();
 listenOperators();
 listenEqual();
