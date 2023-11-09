@@ -12,13 +12,13 @@ function multiply(firstNum, secondNum) {
 
 function divide(firstNum, secondNum) {
     if(secondNum === '0') {
-        operationResult.innerText += '\n=Division by 0 detected';
+        operationResult.innerText += '\n=Division by 0 detected.';
         removeListeners();
     }
     return Number(firstNum) / Number(secondNum);
 }
 function operate() {
-    if (firstNum != '0') firstNum = firstNum.slice(1);
+    if (firstNum != '0') firstNum = firstNum.toString().slice(1);
     if(operationResult.innerText.length != 0) {
         if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += `\n=0`;
         else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`;
@@ -27,13 +27,14 @@ function operate() {
             if(secondNum != ''){            
                 operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
             }
-            operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${firstNum}`;
+            operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${result}`;
         }
         else {
             secondNumLength = secondNum.toString().length;  
             operationResult.innerText += `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
         }
     }
+    
 }
 
 const firstNumListener = function() {
@@ -43,14 +44,14 @@ const firstNumListener = function() {
     else {
         firstNum += this.textContent;
         operationResult.innerText == '0' ? operationResult.innerText = this.textContent : operationResult.innerText += this.textContent; 
-    }
-         
+    }        
 }      
 
 const secondNumListener = function() {
     if(secondNum === '0') {
         secondNum = this.textContent;
         operationResult.innerText = operationResult.innerText.slice(0, -1) + `${secondNum}`;
+        
     }
     else {
         secondNum += this.textContent;
@@ -139,6 +140,7 @@ let secondNum = '';
 let operator = '';
 let result = '';
 let secondNumLength;
+let temp;
 
 const operationResult = document.getElementById('operation-result');
 operationResult.innerText = 0;
