@@ -19,25 +19,22 @@ function divide(firstNum, secondNum) {
 }
 function operate() {
     if (firstNum[0] === '0') firstNum = firstNum.toString().slice(1);
-    if(operationResult.innerText.length != 0) {
-        if((firstNum === '')  && operator != '' && secondNum != '') operationResult.innerText += `\n=${result}`;
-        else if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += `\n=0`;
-        else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`;
-        else if(operationResult.innerText[operationResult.innerText.length-1] === operator){
-            secondNumLength = secondNum.toString().length;
-            if(secondNum != ''){            
-                operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
-            }
-            operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${result}`;
-            
+    if((firstNum === '')  && operator != '' && secondNum != '') operationResult.innerText += `\n=${result}`;
+    else if((firstNum === '')  && operator === '' && secondNum === '') operationResult.innerText += `\n=0`;
+    else if((firstNum != '')  && operator != '' && secondNum === '') operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${firstNum}`;
+    else if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=0`;
+    else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`;
+    else if(operationResult.innerText[operationResult.innerText.length-1] === operator){
+        secondNumLength = secondNum.toString().length;
+        if(secondNum != ''){            
+            operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
         }
-        else {
-            
-            secondNumLength = secondNum.toString().length;  
-            operationResult.innerText += `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
-        }
+        operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${result}`;       
     }
-    
+    else {   
+        secondNumLength = secondNum.toString().length;  
+        operationResult.innerText += `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
+    } 
 }
 
 const firstNumListener = function() {
@@ -53,14 +50,11 @@ const firstNumListener = function() {
 const secondNumListener = function() {
     if(secondNum === '0') {
         secondNum = this.textContent;
-        operationResult.innerText = operationResult.innerText.slice(0, -1) + `${secondNum}`;
-        
+        operationResult.innerText = operationResult.innerText.slice(0, -1) + `${secondNum}`;      
     }
     else {
         secondNum += this.textContent;
         operationResult.innerText += this.textContent;
-        
-
     }
     if (operator === '+') result = add(firstNum, secondNum);
     else if (operator === '-') result = subtract(firstNum, secondNum);
@@ -110,8 +104,6 @@ function listenEqual() {
     operatorEqual.addEventListener('click',listenEqualFunc, once);        
 }
 
-const clearBtn = document.getElementById('clear');
-
 function clear() {
     clearBtn.addEventListener('click', () => {
         firstNum = '0';
@@ -151,7 +143,7 @@ let temp;
 const operationResult = document.getElementById('operation-result');
 let displayValue = operationResult.textContent;
 operationResult.innerText = 0;
-
+const clearBtn = document.getElementById('clear');
 let condition = true;
 const operators = ['+', '-', '*', '/'];
 
