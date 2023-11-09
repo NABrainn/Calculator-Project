@@ -18,9 +18,10 @@ function divide(firstNum, secondNum) {
     return Number(firstNum) / Number(secondNum);
 }
 function operate() {
-    if (firstNum != '0') firstNum = firstNum.toString().slice(1);
+    if (firstNum[0] === '0') firstNum = firstNum.toString().slice(1);
     if(operationResult.innerText.length != 0) {
-        if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += `\n=0`;
+        if((firstNum === '')  && operator != '' && secondNum != '') operationResult.innerText += `\n=${result}`;
+        else if((firstNum === '') || (firstNum === '0') && operator === '' && secondNum === '') operationResult.innerText += `\n=0`;
         else if(operator === '' && secondNum === '') operationResult.innerText += `\n=${firstNum}`;
         else if(operationResult.innerText[operationResult.innerText.length-1] === operator){
             secondNumLength = secondNum.toString().length;
@@ -28,8 +29,10 @@ function operate() {
                 operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
             }
             operationResult.innerText = operationResult.innerText.slice(0, -1) + `\n=${result}`;
+            
         }
         else {
+            
             secondNumLength = secondNum.toString().length;  
             operationResult.innerText += `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
         }
@@ -55,7 +58,9 @@ const secondNumListener = function() {
     }
     else {
         secondNum += this.textContent;
-        operationResult.innerText += this.textContent; 
+        operationResult.innerText += this.textContent;
+        
+
     }
     if (operator === '+') result = add(firstNum, secondNum);
     else if (operator === '-') result = subtract(firstNum, secondNum);
@@ -142,7 +147,9 @@ let result = '';
 let secondNumLength;
 let temp;
 
+
 const operationResult = document.getElementById('operation-result');
+let displayValue = operationResult.textContent;
 operationResult.innerText = 0;
 
 let condition = true;
