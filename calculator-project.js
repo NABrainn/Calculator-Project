@@ -34,7 +34,15 @@ function operate() {
     else {   
         secondNumLength = secondNum.toString().length;  
         operationResult.innerText += `\n=${Math.round(result * Math.pow(10, secondNumLength+1)) / Math.pow(10, secondNumLength+1)}`;
-    } 
+    }
+
+    //Prevent the user from inserting any more numbers after pressing '='
+    document.querySelectorAll('.digits').forEach(digit => {
+        digit.removeEventListener('click', firstNumListener);
+    })
+    document.querySelectorAll('.digits').forEach(digit => {
+        digit.removeEventListener('click', secondNumListener);
+    })
 }
 
 const firstNumListener = function() {
@@ -110,7 +118,6 @@ function clear() {
         secondNum = '';
         operator = '';
         result = '';
-        error = '';
         operationResult.innerText = 0;
         document.querySelectorAll('.digits').forEach(digit => {
             digit.removeEventListener('click', secondNumListener);
@@ -137,7 +144,6 @@ let secondNum = '';
 let operator = '';
 let result = '';
 let secondNumLength;
-let temp;
 
 
 const operationResult = document.getElementById('operation-result');
